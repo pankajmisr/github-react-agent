@@ -1,0 +1,10 @@
+langchain>=0.1.0
+langchain-core>=0.1.0
+langchain-openai>=0.0.1
+python-dotenv>=0.21.0
+requests>=2.28.0
+pydantic>=2.0.0
+
+# Optional: Uncomment to use Vertex AI
+# google-cloud-aiplatform>=1.25.0
+# vertexai>=0.0.1
