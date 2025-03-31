@@ -2,15 +2,15 @@
 Tool for listing contents of a GitHub repository.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, ClassVar
 
 from github_react_agent.tools.base import GitHubBaseTool, GitHubToolException
 
 
 class GitHubListContentsTool(GitHubBaseTool):
     """Tool for listing contents of a GitHub repository."""
-    name = "github_list_contents"
-    description = """
+    name: ClassVar[str] = "github_list_contents"
+    description: ClassVar[str] = """
     List the contents of a GitHub repository or directory within a repository.
     Input should be in the format "owner/repo/path" where path is optional.
     Examples:
