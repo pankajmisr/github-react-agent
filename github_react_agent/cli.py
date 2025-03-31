@@ -4,12 +4,15 @@ Command-line interface for GitHub ReAct Agent.
 
 import argparse
 import logging
+import os
 import sys
 from typing import List, Optional
 
 from github_react_agent.agent import create_agent
 from github_react_agent.config import config, validate_config, ModelProvider
 
+# Disable LangSmith warnings
+os.environ["LANGCHAIN_TRACING_V2"] = "false"
 
 def setup_logger(verbose: bool = False) -> None:
     """Set up logging configuration."""
@@ -57,7 +60,7 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     vertex_group.add_argument(
         "--use-vertex-agent",
         action="store_true",
-        help="Use Vertex AI agent implementation",
+        help="Use Vertex AI agent implementation (legacy option, ignored)",
     )
     vertex_group.add_argument(
         "--vertex-project",
@@ -165,7 +168,7 @@ def main(args: Optional[List[str]] = None) -> int:
         agent = create_agent(
             model_name=parsed_args.model,
             temperature=parsed_args.temperature,
-            use_vertex_agent=parsed_args.use_vertex_agent,
+            # use_vertex_agent flag is kept for backward compatibility but ignored
             verbose=verbose,
         )
         
