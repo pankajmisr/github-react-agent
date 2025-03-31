@@ -2,7 +2,7 @@
 Base classes for GitHub tools.
 """
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, ClassVar, Annotated
 
 import requests
 from langchain_core.tools import BaseTool, ToolException
@@ -18,6 +18,11 @@ class GitHubToolException(ToolException):
 
 class GitHubBaseTool(BaseTool):
     """Base class for GitHub tools."""
+    # The name and description must be class variables with ClassVar annotation
+    name: ClassVar[str] = ""
+    description: ClassVar[str] = ""
+    
+    # Pydantic fields that can be instance attributes
     github_token: str = Field(default_factory=lambda: config.github_api_token)
     github_api_url: str = Field(default_factory=lambda: config.github_api_url)
     
