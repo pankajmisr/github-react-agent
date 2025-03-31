@@ -3,15 +3,15 @@ Tool for getting the content of a file from a GitHub repository.
 """
 
 import base64
-from typing import Optional
+from typing import Optional, ClassVar
 
 from github_react_agent.tools.base import GitHubBaseTool, GitHubToolException
 
 
 class GitHubGetFileContentTool(GitHubBaseTool):
     """Tool for getting the content of a file from a GitHub repository."""
-    name = "github_get_file_content"
-    description = """
+    name: ClassVar[str] = "github_get_file_content"
+    description: ClassVar[str] = """
     Get the content of a file from a GitHub repository.
     Input should be in the format "owner/repo/path_to_file".
     Examples:
