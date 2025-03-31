@@ -8,3 +8,4 @@ pydantic>=2.0.0
 # Optional: Uncomment to use Vertex AI
 # google-cloud-aiplatform>=1.25.0
 # vertexai>=0.0.1
+# langchain-google-vertexai>=0.0.1
