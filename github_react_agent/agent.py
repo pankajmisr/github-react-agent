@@ -6,6 +6,7 @@ which can reason about and interact with GitHub repositories.
 """
 
 import logging
+import os
 from typing import Any, Dict, List, Optional, Sequence, Union
 
 # LangChain imports
@@ -21,11 +22,23 @@ from langchain import hub
 from langchain_openai import ChatOpenAI
 
 # For Vertex AI support (optional)
+# Disable LangSmith tracing to avoid warnings
+os.environ["LANGCHAIN_TRACING_V2"] = "false"
+
 try:
-    from vertexai import agent_engines
-    VERTEX_AVAILABLE = True
-except ImportError:
+    # Check for Python version to avoid import errors
+    import sys
+    if sys.version_info >= (3, 9):
+        import vertexai
+        from langchain_google_vertexai import ChatVertexAI
+        VERTEX_AVAILABLE = True
+        print("Vertex AI support is available")
+    else:
+        print("Vertex AI requires Python 3.9+")
+        VERTEX_AVAILABLE = False
+except ImportError as e:
     VERTEX_AVAILABLE = False
+    print(f"Vertex AI import error: {e}")
 
 # Internal imports
 from github_react_agent.config import config, ModelProvider
@@ -129,19 +142,33 @@ def get_model(
         )
     
     elif provider == ModelProvider.VERTEX and VERTEX_AVAILABLE:
-        # Import here to avoid errors if not available
-        from langchain_google_vertexai import ChatVertexAI
-        
-        # Default model if not specified
-        if model_name is None:
-            model_name = "gemini-1.5-pro"
+        # Initialize Vertex AI
+        try:
+            # Default model if not specified
+            if model_name is None:
+                model_name = "gemini-1.5-pro"
+                
+            # Ensure project is set
+            project_id = config.vertex_project
+            location = config.vertex_location
             
-        return ChatVertexAI(
-            temperature=temperature,
-            model_name=model_name,
-            project=config.vertex_project,
-            location=config.vertex_location,
-        )
+            if not project_id:
+                raise ValueError("VERTEX_PROJECT environment variable must be set")
+
+            # Initialize Vertex AI
+            vertexai.init(project=project_id, location=location)
+            
+            # Create and return the Vertex AI model
+            return ChatVertexAI(
+                temperature=temperature,
+                model_name=model_name,
+                project=project_id,
+                location=location,
+                max_output_tokens=2048,
+            )
+        except Exception as e:
+            logger.error(f"Error initializing Vertex AI: {e}")
+            raise
     
     elif provider == ModelProvider.AZURE:
         # For Azure OpenAI - requires additional configuration
@@ -215,23 +242,14 @@ def create_agent(
     agent_executor_kwargs = kwargs.copy()
     agent_executor_kwargs["verbose"] = config.verbose
     
-    # Create the agent
-    if use_vertex_agent and VERTEX_AVAILABLE:
-        # Create a Vertex AI agent
-        agent = agent_engines.LangchainAgent(
-            model=model,
-            tools=tools,
-            prompt=prompt,
-            agent_executor_kwargs=agent_executor_kwargs,
-            runnable_builder=react_builder,
-        )
-    else:
-        # Create a regular LangChain agent
-        agent = react_builder(
-            model=model,
-            tools=tools,
-            prompt=prompt,
-            agent_executor_kwargs=agent_executor_kwargs
-        )
+    # Create the agent - we no longer support Vertex agent_engines
+    # since it's not available in current SDK versions
+    # Just use the standard LangChain agent with Vertex model
+    agent = react_builder(
+        model=model,
+        tools=tools,
+        prompt=prompt,
+        agent_executor_kwargs=agent_executor_kwargs
+    )
     
     return agent
