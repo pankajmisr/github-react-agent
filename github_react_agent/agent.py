@@ -85,10 +85,10 @@ def react_builder(
     agent = create_react_agent(model, tools, prompt)
     
     # Create and return the executor
+    # Don't add verbose here - it will be in agent_executor_kwargs if needed
     return AgentExecutor(
         agent=agent,
         tools=tools,
-        verbose=config.verbose,
         handle_parsing_errors=True,
         **agent_executor_kwargs
     )
@@ -211,6 +211,10 @@ def create_agent(
     if verbose is not None:
         config.verbose = verbose
     
+    # Prepare agent executor kwargs
+    agent_executor_kwargs = kwargs.copy()
+    agent_executor_kwargs["verbose"] = config.verbose
+    
     # Create the agent
     if use_vertex_agent and VERTEX_AVAILABLE:
         # Create a Vertex AI agent
@@ -218,7 +222,7 @@ def create_agent(
             model=model,
             tools=tools,
             prompt=prompt,
-            agent_executor_kwargs={"verbose": config.verbose},
+            agent_executor_kwargs=agent_executor_kwargs,
             runnable_builder=react_builder,
         )
     else:
@@ -227,7 +231,7 @@ def create_agent(
             model=model,
             tools=tools,
             prompt=prompt,
-            agent_executor_kwargs={"verbose": config.verbose, **kwargs}
+            agent_executor_kwargs=agent_executor_kwargs
         )
     
     return agent
