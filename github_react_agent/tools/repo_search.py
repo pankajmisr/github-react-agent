@@ -2,15 +2,15 @@
 Tool for searching GitHub repositories.
 """
 
-from typing import Optional
+from typing import Optional, ClassVar
 
 from github_react_agent.tools.base import GitHubBaseTool, GitHubToolException
 
 
 class GitHubSearchRepositoriesTool(GitHubBaseTool):
     """Tool for searching GitHub repositories."""
-    name = "github_search_repositories"
-    description = """
+    name: ClassVar[str] = "github_search_repositories"
+    description: ClassVar[str] = """
     Search for GitHub repositories based on a query.
     Input should be a search query string.
     Examples:
