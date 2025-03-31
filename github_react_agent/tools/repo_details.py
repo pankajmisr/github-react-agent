@@ -2,13 +2,15 @@
 Tool for getting details about a GitHub repository.
 """
 
+from typing import ClassVar
+
 from github_react_agent.tools.base import GitHubBaseTool, GitHubToolException
 
 
 class GitHubRepoDetailsTool(GitHubBaseTool):
     """Tool for getting details about a GitHub repository."""
-    name = "github_repo_details"
-    description = """
+    name: ClassVar[str] = "github_repo_details"
+    description: ClassVar[str] = """
     Get detailed information about a GitHub repository.
     Input should be in the format "owner/repo".
     Examples:
