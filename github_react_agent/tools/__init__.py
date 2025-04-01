@@ -8,6 +8,12 @@ from github_react_agent.tools.commit import GitHubCommitFileTool, GitHubCommitMu
 from github_react_agent.tools.file_content import GitHubGetFileContentTool
 from github_react_agent.tools.file_metadata import GitHubGetFileMetadataTool
 from github_react_agent.tools.pull_request import GitHubCreatePullRequestTool
+from github_react_agent.tools.pull_request_review import (
+    GitHubReviewPullRequestTool,
+    GitHubListPullRequestReviewsTool,
+    GitHubGetPullRequestTool,
+    GitHubMergePullRequestTool
+)
 from github_react_agent.tools.repo_contents import GitHubListContentsTool
 from github_react_agent.tools.repo_details import GitHubRepoDetailsTool
 from github_react_agent.tools.repo_search import GitHubSearchRepositoriesTool
@@ -25,6 +31,10 @@ __all__ = [
     "GitHubCommitFileTool",
     "GitHubCommitMultipleFilesTool",
     "GitHubCreatePullRequestTool",
+    "GitHubReviewPullRequestTool",
+    "GitHubListPullRequestReviewsTool",
+    "GitHubGetPullRequestTool",
+    "GitHubMergePullRequestTool",
     "get_github_tools",
 ]
 
@@ -42,4 +52,8 @@ def get_github_tools():
         GitHubCommitFileTool(),
         GitHubCommitMultipleFilesTool(),
         GitHubCreatePullRequestTool(),
+        GitHubReviewPullRequestTool(),
+        GitHubListPullRequestReviewsTool(),
+        GitHubGetPullRequestTool(),
+        GitHubMergePullRequestTool()
     ]
