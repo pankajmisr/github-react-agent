@@ -8,6 +8,7 @@ from github_react_agent.tools.commit import GitHubCommitFileTool, GitHubCommitMu
 from github_react_agent.tools.file_content import GitHubGetFileContentTool
 from github_react_agent.tools.file_metadata import GitHubGetFileMetadataTool
 from github_react_agent.tools.pull_request import GitHubCreatePullRequestTool
+from github_react_agent.tools.pull_request_analyze import GitHubAnalyzePullRequestTool
 from github_react_agent.tools.pull_request_review import (
     GitHubReviewPullRequestTool,
     GitHubListPullRequestReviewsTool,
@@ -35,6 +36,7 @@ __all__ = [
     "GitHubListPullRequestReviewsTool",
     "GitHubGetPullRequestTool",
     "GitHubMergePullRequestTool",
+    "GitHubAnalyzePullRequestTool",
     "get_github_tools",
 ]
 
@@ -55,5 +57,6 @@ def get_github_tools():
         GitHubReviewPullRequestTool(),
         GitHubListPullRequestReviewsTool(),
         GitHubGetPullRequestTool(),
-        GitHubMergePullRequestTool()
+        GitHubMergePullRequestTool(),
+        GitHubAnalyzePullRequestTool(),
     ]
